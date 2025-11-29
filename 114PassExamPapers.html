@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>114 年度加油站甄選 練習題庫（12等/13等）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color-scheme: light dark;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #f5f7ff 0, #e5ecff 35%, #dde7ff 60%, #cfd8ff 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+    .app {
+      width: 100%;
+      max-width: 1100px;
+      margin: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #1f2a5a;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color:#4a5785;
+      margin-top:4px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(46, 119, 255, 0.08);
+      color: #23408e;
+      font-size: 0.8rem;
+    }
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #2f7bff;
+      box-shadow: 0 0 0 4px rgba(47, 123, 255, 0.18);
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 18px;
+      padding: 18px 20px;
+      box-shadow: 0 14px 35px rgba(15, 35, 95, 0.12);
+      backdrop-filter: blur(8px);
+    }
+    .settings-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 24px;
+      align-items: center;
+    }
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.9rem;
+      color: #364161;
+    }
+    .setting-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    label { cursor: pointer; }
+    select, input[type="number"] {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #c5cfef;
+      font-size: 0.9rem;
+      outline: none;
+      background: #f7f8ff;
+    }
+    select:focus, input[type="number"]:focus {
+      border-color: #2f7bff;
+      box-shadow: 0 0 0 2px rgba(47, 123, 255, 0.18);
+      background: #ffffff;
+    }
+    input[type="number"] {
+      width: 80px;
+    }
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s ease, color 0.12s ease;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #2955ff, #4a84ff);
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(41, 85, 255, 0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(41, 85, 255, 0.4);
+    }
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 8px 16px rgba(41, 85, 255, 0.35);
+    }
+    .btn-secondary {
+      background: #f3f5ff;
+      color: #28345e;
+      border: 1px solid #c7d2ff;
+    }
+    .btn-secondary:hover { background: #e5ebff; }
+    .btn[disabled] {
+      opacity: 0.55;
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+      color: #5a668c;
+      flex-wrap: wrap;
+    }
+    .question-type {
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: #eef1ff;
+      color: #1f2a5a;
+    }
+    .question-progress {
+      font-size: 0.8rem;
+    }
+    .chip {
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(31, 122, 255, 0.08);
+      color: #1f2a5a;
+    }
+    .question-text {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #141b3f;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    .options {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .option {
+      border-radius: 12px;
+      padding: 8px 10px;
+      border: 1px solid #d2dcff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f9fbff;
+      cursor: pointer;
+      transition: border-color 0.12s ease, background 0.12s ease, transform 0.08s ease;
+    }
+    .option input { cursor: pointer; }
+    .option-label {
+      font-size: 0.95rem;
+      color: #1f2748;
+    }
+    .option:hover {
+      border-color: #2f7bff;
+      background: #f2f6ff;
+      transform: translateY(-1px);
+    }
+    .option.correct {
+      border-color: #2ecc71;
+      background: #ecfff5;
+    }
+    .option.incorrect {
+      border-color: #ff4d6a;
+      background: #fff0f3;
+    }
+    .option.disabled {
+      cursor: default;
+      opacity: 0.9;
+      transform: none;
+    }
+    .feedback {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      align-items: center;
+    }
+    .feedback.correct { color: #1f8b4d; }
+    .feedback.incorrect { color: #cc2448; }
+    .feedback-pill {
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+    }
+    .feedback-pill.correct {
+      background: #e4fff1;
+      border: 1px solid #a9f3c5;
+    }
+    .feedback-pill.incorrect {
+      background: #ffe6ec;
+      border: 1px solid #ffb5c6;
+    }
+    .question-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .score-info {
+      font-size: 0.9rem;
+      color: #37426b;
+    }
+    .score-strong {
+      font-weight: 700;
+      color: #1f2a5a;
+    }
+    .summary-card {
+      margin-top: 8px;
+      font-size: 0.95rem;
+      color: #1b2346;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .summary-em {
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    .summary-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: #f3f5ff;
+      color: #273261;
+      font-size: 0.8rem;
+    }
+    .hidden { display: none !important; }
+    @media (max-width: 640px) {
+      .app { margin: 10px; }
+      .card { padding: 14px 14px; }
+      .question-text { font-size: 0.96rem; }
+      .options { gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div>
+        <div class="title">114 年度加油站甄選 — 練習題庫整合版</div>
+        <div class="subtitle">
+          試卷：<strong>12 等站長／副站長 · 12 等助理站長 · 13 等站長／副站長</strong><br/>
+          題型：是非題（各 10 題）＋單選題（各 40 題），部分題目有多於一個正確答案（任選其一即得分）
+        </div>
+      </div>
+      <div class="badge">
+        <span class="badge-dot"></span>
+        <span>多卷整合 · 自動計分 · 錯題重練</span>
+      </div>
+    </div>
+
+    <!-- 設定區 -->
+    <div class="card">
+      <div class="settings-grid">
+        <div class="setting-group">
+          <div style="font-weight:600;">選擇試卷</div>
+          <div class="setting-row">
+            <select id="examSelect">
+              <option value="E12M">12 等站長／副站長</option>
+              <option value="E12A">12 等助理站長</option>
+              <option value="E13M">13 等站長／副站長</option>
+            </select>
+            <span style="font-size:0.8rem;color:#6b7392;">切換不同等別題庫練習</span>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <div style="font-weight:600;">題型選擇</div>
+          <div class="setting-row">
+            <label><input type="checkbox" id="includeTf" checked> 是非題</label>
+            <label><input type="checkbox" id="includeMc" checked> 選擇題</label>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <div style="font-weight:600;">題目數量</div>
+          <div class="setting-row">
+            <label>
+              <input type="number" id="questionCount" min="1" max="50" placeholder="全部">
+            </label>
+            <div style="font-size:0.8rem;color:#6b7392;">不填 = 使用該卷所有符合條件的題目</div>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <div style="font-weight:600;">出題方式</div>
+          <div class="setting-row">
+            <label><input type="checkbox" id="shuffle" checked> 隨機出題</label>
+          </div>
+        </div>
+
+        <div class="setting-group" style="margin-left:auto;">
+          <button class="btn btn-primary" id="startBtn">
+            ▶ 開始練習
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 題目卡片 -->
+    <div class="card hidden" id="quizCard">
+      <div class="question-meta">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span class="question-type" id="examLabel"></span>
+          <span class="question-type" id="questionType"></span>
+          <span class="chip" id="questionId"></span>
+        </div>
+        <div class="question-progress">
+          第 <span id="currentIndexLabel">1</span> 題 ／ 共 <span id="totalCountLabel">0</span> 題
+        </div>
+      </div>
+
+      <div class="question-text" id="questionText"></div>
+
+      <ul class="options" id="optionsContainer">
+      </ul>
+
+      <div id="feedback" class="feedback hidden"></div>
+
+      <div class="question-footer">
+        <div class="score-info">
+          目前得分：<span class="score-strong" id="currentScore">0</span> 分
+          <span style="font-size:0.8rem;color:#7b83a0;">（每題 2 分）</span>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-secondary" id="restartBtn" type="button">重新設定</button>
+          <button class="btn btn-primary" id="submitBtn" type="button">送出答案</button>
+          <button class="btn btn-secondary hidden" id="nextBtn" type="button">下一題 ▶</button>
+        </div>
+      </div>
+
+      <div class="summary-card hidden" id="summaryCard"></div>
+    </div>
+  </div>
+
+  <script>
+    // ====== 題庫資料（由 Python 解析三份 PDF 產生） ======
+    const QUESTIONS = [
+	{"id": "E12M_T1", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "tf", "no": 1, "text": "上班時間公出時應將離站、返站時間及公出事由詳細記錄於工作日誌特別記事欄 內", "correctAnswers": ["O"]},
+	{"id": "E12M_T2", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "tf", "no": 2, "text": "加油站泵島交班 中斷營業時間，不得超過三分鐘", "correctAnswers": ["O"]}, 
+	{"id": "E12M_T3", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "tf", "no": 3, "text": "加油(氣)票加油(氣)後，不另開立發票", "correctAnswers": ["O"]}, 
+	{"id": "E12M_T4", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "tf", "no": 4, "text": "指定公升數及指定金額之加油 (氣)票均可使用", "correctAnswers": ["X"]}, 
+	{"id": "E12M_T5", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "tf", "no": 5, "text": "如遇3S系統未連線時，應每班抄錄加油(氣)機金額累計數，並由交接班人員會同 辦理", "correctAnswers": ["O"]}, 
+	{"id": "E12M_T6", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "tf", "no": 6, "text": "加油站應每月盤查各油槽存量，按實紀錄加油機試桶、油位及溫度等量測結果，將相關數據正確登錄於3S系統或工作日誌並做核對", "correctAnswers": ["O"]}, 
+	{"id": "E12M_T7", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "tf", "no": 7, "text": "勞務採購之查核金額為新臺幣 5000萬元", "correctAnswers": ["X"]}, 
+	{"id": "E12M_T8", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "tf", "no": 8, "text": "勞務採購之查核金額為新臺幣 1000萬元", "correctAnswers": ["O"]}, 
+	{"id": "E12M_T9", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "tf", "no": 9, "text": "機關辦理分 批辦理採購，應將各批合計總金額認定其採購金額", "correctAnswers": ["O"]}, 
+	{"id": "E12M_T10", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "tf", "no": 10, "text": "非消耗性物品領用後未滿使用期限，保管人調離職務或退休時，可填具「非消耗性 物品保管 /入帳單/異動單/報廢單」 ，直接申請辦理報廢，無須列入移交項目。 ", "correctAnswers": ["X"]}, 
+	
+	{"id": "E12A_T1", "exam": "E12A", "examLabel": "12等助理站長", "type": "tf", "no": 1, "text": "機關辦理小額財物採購，得洽1家廠商代為蒐集提供3家廠商之報價或估價單，供其作為採購之決定。", "correctAnswers": ["X"]}, 
+	{"id": "E12A_T2", "exam": "E12A", "examLabel": "12等助理站長", "type": "tf", "no": 2, "text": "公告金額十分之一以下工程、財物採購之驗收，可免辦理現場驗收，但承辦採購單位 仍應備具書面憑證辦理書面驗收作業", "correctAnswers": ["O"]}, 
+	{"id": "E12A_T3", "exam": "E12A", "examLabel": "12等助理站長", "type": "tf", "no": 3, "text": "機關辦理小額採購驗收時，採購單位承辦人得擔任主驗人或樣品及材料檢驗人", "correctAnswers": ["X"]}, 
+	{"id": "E12A_T4", "exam": "E12A", "examLabel": "12等助理站長", "type": "tf", "no": 4, "text": "機關人力不敷分派時，得指派技工、工友或臨時人員擔任主驗人員", "correctAnswers": ["X"]}, 
+	{"id": "E12A_T5", "exam": "E12A", "examLabel": "12等助理站長", "type": "tf", "no": 5, "text": "辦理新臺幣 15萬元以下小額採購時，仍應適用政府採購法相關規定，注意廠商有無違 反政府採購法第 103條所規定之情形 (廠商遭刊登政府採購公報為拒絕往來廠商 )", "correctAnswers": ["O"]}, 
+	{"id": "E12A_T6", "exam": "E12A", "examLabel": "12等助理站長", "type": "tf", "no": 6, "text": "若遇到加錯油事件，顧客要求回原廠處理時，請加油站務必聯繫保險公司派員到 原 廠，以便保險公司與原廠技師確認所需維修項目及維修金額", "correctAnswers": ["O"]}, 
+	{"id": "E12A_T7", "exam": "E12A", "examLabel": "12等助理站長", "type": "tf", "no": 7, "text": "每日營業結束(或交班)後，值班站長不須負責各類報表之填製及 3S電腦結帳等工 作，交給勞務人員即可", "correctAnswers": ["X"]}, 
+	{"id": "E12A_T8", "exam": "E12A", "examLabel": "12等助理站長", "type": "tf", "no": 8, "text": "站長、副站長需負責加油(氣)機流量計檢定合格證在有效期限內", "correctAnswers": ["O"]}, 
+	{"id": "E12A_T9", "exam": "E12A", "examLabel": "12等助理站長", "type": "tf", "no": 9, "text": "加油(氣)機機械累計數應每月校正乙次，以便因應加油(氣)機當機無法讀取電子 金額時做為帳務處理之依據", "correctAnswers": ["X"]}, 
+	{"id": "E12A_T10", "exam": "E12A", "examLabel": "12等助理站長", "type": "tf", "no": 10, "text": "加油(氣)站於存量過低或預計未能發油(氣)至某一時間時，應即時向運輸服務中 心緊急請撥(於工作日誌記錄受話人姓名)並向主管零售服務中心報告。 ", "correctAnswers": ["X"]}, 
+	
+	{"id": "E13M_T1", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "tf", "no": 1, "text": "機關辦理小額財物採購，得洽1家廠商代為蒐集提供3家廠商之報價或估價單，供其作為採購之決定。", "correctAnswers": ["X"]}, 
+	{"id": "E13M_T2", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "tf", "no": 2, "text": "機關辦理小額採購驗收時，採購單位承辦人得擔任主驗人或樣品及材料檢驗人", "correctAnswers": ["X"]}, 
+	{"id": "E13M_T3", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "tf", "no": 3, "text": "公告金額十分之一以下工程、財物採購之驗收，可免辦理現場驗收，但承辦採購單 位仍應備具書面憑證辦理書面驗收作業", "correctAnswers": ["O"]}, 
+	{"id": "E13M_T4", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "tf", "no": 4, "text": "非依共同供應契約辦理之公告金額十分之一以下之採購時，無需考慮廠商報價之合 理性，逕以其報價決標", "correctAnswers": ["X"]}, 
+	{"id": "E13M_T5", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "tf", "no": 5, "text": "指定公升數及指定金額之加油 (氣)票均可使用", "correctAnswers": ["X"]}, 
+	{"id": "E13M_T6", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "tf", "no": 6, "text": "地下儲油槽最大存油量，以其總容量之百分之 80為原則", "correctAnswers": ["X"]}, 
+	{"id": "E13M_T7", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "tf", "no": 7, "text": "會員捷利卡每次加值金額需為 100的倍數", "correctAnswers": ["X"]}, 
+	{"id": "E13M_T8", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "tf", "no": 8, "text": "滅火器上端距地(樓)面之距離， 18公斤以上者不得超過 1公尺，18公斤以下者不 得超過1.5公尺", "correctAnswers": ["O"]}, 
+	{"id": "E13M_T9", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "tf", "no": 9, "text": "3S後台裡面可用站代號登入並操作的功能，皆應屬於站內業務處理範圍，只有需要 協助的時候才請相關權責單位來幫忙處理", "correctAnswers": ["O"]}, 
+	{"id": "E13M_T10", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "tf", "no": 10, "text": "主油交易若已做交班，則不能執行沖帳作廢 (CTRL+T,F6) 。 ", "correctAnswers": ["O"]}, 
+	
+	{"id": "E12M_Q1", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 1, "text": "依據3S日結系統油槽每日差異數資料，如 (實際存量 -計算存量 )超過-100公升時， 應瞭解差異原因，並進行以下何種作業 ?", "options": {"A": "量測測漏管油氣濃度", "B": "檢查加油機運作 是否正常", "C": "以上皆是", "D": "以上皆非"}, "correctAnswers": ["C"]}, 
+	{"id": "E12M_Q2", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 2, "text": "油槽溫度之人工量測頻率為何 ?", "options": {"A": "每月", "B": "每季", "C": "每半年", "D": "每年"}, "correctAnswers": ["B"]}, 
+	{"id": "E12M_Q3", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 3, "text": "加油站夜間 (00:00~07:00) 投款上限規定為何 ?", "options": {"A": "1萬", "B": "2萬", "C": "3萬", "D": "5萬"}, "correctAnswers": ["A"]}, 
+	{"id": "E12M_Q4", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 4, "text": "人工量油與自動液位計量測油槽油位差異超過多少，應向修護中心報修並紀錄於工作 日誌?", "options": {"A": "5mm", "B": "10mm", "C": "15mm", "D": "20mm"}, "correctAnswers": ["B"]}, 
+	{"id": "E12M_Q5", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 5, "text": "除可提供購油手冊之漁民及可提出農機使用證之農民外，其他顧客提桶(灌桶)加油 之數量，汽油在多少公升以上，加油站須登記顧客相關資料", "options": {"A": "5公升", "B": "10公升", "C": "50公升", "D": "100公升"}, "correctAnswers": ["B"]}, 
+	{"id": "E12M_Q6", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 6, "text": "加油站遇到何種顧客不須婉拒加油", "options": {"A": "經多次勸導仍未熄火者", "B": "經統一編號檢 核為汽柴油批發業者", "C": "未熄滅爐火之流動餐車", "D": "未掛車牌者"}, "correctAnswers": ["B", "D"]}, 
+	{"id": "E12M_Q7", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 7, "text": "為防止加錯油，何者為非 ?", "options": {"A": "詢問加油種類及數量", "B": "確認與油箱蓋所標示油品相符", "C": "遇顧客正因旁事分心，未明確表示加油種類時，請停止為其加油之後續動作，待顧 客明確表示加油種類後，再為其加油", "D": "若顧客告知加油油品與車輛油箱蓋標示限加油 品不相符，但顧客仍堅持加油時，直接依顧客指示加油"}, "correctAnswers": ["D"]}, 
+	{"id": "E12M_Q8", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 8, "text": "加油站櫃檯現金保險額度不包含以下何種項目", "options": {"A": "營業室金櫃內的找零周轉金", "B": "加油 島的營業現金", "C": "快保中心的營業現金", "D": "營業室抽屜內的找零收轉金"}, "correctAnswers": ["A"]}, 
+	{"id": "E12M_Q9", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 9, "text": "前台交易 :顧客加油金額為 100元，信用卡與現金混合付款 :付款類別為信用卡， 【副商品】T25數量打入 10 ，則信用卡實際簽單金額應為多少", "options": {"A": "90", "B": "100", "C": "10", "D": "110"}, "correctAnswers": ["A"]}, 
+	{"id": "E12M_Q10", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 10, "text": "建立班結報表發現某槍的電子公升數發出量異常，造成相關油品 /油槽統計差異數 過大，以交易查詢計算出實際發出公升數後，更新至該槍號的班報 -本班機械錶欄位，要再次產生本班的班報需執行", "options": {"A": "重建計算", "B": "重新試算", "C": "轉出明細", "D": "查詢班 報"}, "correctAnswers": ["A", "B", "C", "D"]}, 
+	{"id": "E12M_Q11", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 11, "text": "單月份上旬執行媒體申報作業，若版本已更新成功但一直申報上傳財政部網站失敗， 則要通知本處", "options": {"A": "會計組", "B": "對帳中心", "C": "不需做處理", "D": "零售中心業務負責人"}, "correctAnswers": ["D"]}, 
+	{"id": "E12M_Q12", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 12, "text": "若本月月底匯入灌裝口準確度異常，則會影響油料分析盈虧統計表裡面的", "options": {"A": "運輸盈 虧試算表", "B": "沒有影響", "C": "油槽隙尺表", "D": "試桶作業維護"}, "correctAnswers": ["A"]}, 
+	{"id": "E12M_Q13", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 13, "text": "若在後台對某泵島執行”交班管理 -指定班別交班”，則該班該泵島的所有油槍交易 電子累計數", "options": {"A": "不會", "B": "會", "C": "不一定", "D": "以上皆非 帶入班結交班累計數，會造成該班報應繳現金異常、發票不平帳，故後續要再以機械表修正主油發出量"}, "correctAnswers": ["C"]}, 
+	{"id": "E12M_Q14", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 14, "text": "目前事業部零售室業務規劃只允許付款類別為", "options": {"A": "中油pay", "B": "條碼支付", "C": "票證", "D": "現金 已出的紙本電子發票沖帳為含載具發票"}, "correctAnswers": ["C"]}, 
+	{"id": "E12M_Q15", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 15, "text": "加油站因業務聯繫需要，需查詢會員基本資料時，該依下列何方式辦理：", "options": {"A": "請發卡 站協助提供資訊", "B": "請客服中心協助與顧客聯繫", "C": "請管理師提供資訊", "D": "請客服中 心提供資訊"}, "correctAnswers": ["B"]}, 
+	{"id": "E12M_Q16", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 16, "text": "會員資料登錄後，多久需將會員卡申請表寄交零售中心", "options": {"A": "每半月", "B": "每月", "C": "每兩月", "D": "每季"}, "correctAnswers": ["B"]}, 
+	{"id": "E12M_Q17", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 17, "text": "會員資料登錄後，將會員卡申請表寄交零售中心前，需做何種作業 ?", "options": {"A": "進入VIPMdp 會員資料管理系統→ VIP會員資料登錄作業", "B": "直接寄給管理師", "C": "進入VIPCbs會員 卡務管理→ B003開卡", "D": "進入VIPMdp會員資料管理→ A001申請表交寄作業"}, "correctAnswers": ["D"]}, 
+	{"id": "E12M_Q18", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 18, "text": "各加油站 (以員工編號登入 )每月幾日前登入「 VIPBbq會員卡基本業務查詢 001單站 異常查詢 (加油站)」查詢該站前月會員卡異常交易資料", "options": {"A": "5", "B": "7", "C": "10", "D": "15"}, "correctAnswers": ["A"]}, 
+	{"id": "E12M_Q19", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 19, "text": "依現行公告加油滿多少元即可積點", "options": {"A": "1元", "B": "10元", "C": "50元", "D": "100元"}, "correctAnswers": ["C"]}, {"id": "E12M_Q20", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 20, "text": "如遇會員系統離線等特殊情況，或交易已完成而網路連線不通，顧客堅持使用會員點 數折抵時， 3S需以何代碼站掛入帳", "options": {"A": "D9999", "B": "D999", "C": "D99ZZ", "D": "D999ZZZ"}, "correctAnswers": ["B"]}, {"id": "E12M_Q21", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 21, "text": "客人更換發票，遇本公司報完稅 -單月且發票開立後多少天內，才可執行專案作廢", "options": {"A": "30", "B": "45", "C": "60", "D": "90"}, "correctAnswers": ["C"]}, {"id": "E12M_Q22", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 22, "text": "依中油精緻洗車標準作業程序，洗完一台車的建議時間應多久為佳，以提高周轉率", "options": {"A": "12分鐘", "B": "10分鐘", "C": "8分鐘", "D": "6分鐘"}, "correctAnswers": ["C"]}, {"id": "E12M_Q23", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 23, "text": "各站洗車價格依各車型收費有所不同，以下何者錯誤 ?", "options": {"A": "收費依車型分為小型 車、大型車、廂型車，價格有所差異", "B": "事業部訂定各車型收費標準，惟遇爭議車 型以現場人員認定為主", "C": "收費標準不得依地域差異，自行調整洗車價格", "D": "玻 璃除油膜施作範圍為前擋玻璃，不含後視鏡、車窗玻璃"}, "correctAnswers": ["C"]}, {"id": "E12M_Q24", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 24, "text": "複合商店每季全面盤點商品存貨後，其盈虧在多少核銷金額比率內得依實核銷？", "options": {"A": "百分之一", "B": "百分之三", "C": "千分之三", "D": "千分之一"}, "correctAnswers": ["C"]}, {"id": "E12M_Q25", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 25, "text": "結算盤點時，盤盈虧金額在規定核銷金額比率內得依實核銷；請問盤盈虧金額是各商 品盤差量乘以下列何種價格來算出？", "options": {"A": "商品售價", "B": "商品進價", "C": "商品優惠價", "D": "以上相加"}, "correctAnswers": ["B"]}, {"id": "E12M_Q26", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 26, "text": "加油站設置管理規則第 26條規定，加油站可兼營項目不包括哪一項 ?", "options": {"A": "汽機車與自 行車買賣與租賃", "B": "便利商店", "C": "僅供收受洗滌物場所之洗衣業務", "D": "餐廳"}, "correctAnswers": ["D"]}, {"id": "E12M_Q27", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 27, "text": "關於中油 PAY電子商城，以下敘述何者錯誤 ?", "options": {"A": "提供消費者選購各項用品，並可 以會員點數、信用卡等方式付款", "B": "供貨方式分為宅配到府、到站取貨 兩種", "C": "全 額會員點數兌換視為贈品，不提供退貨服務", "D": "消費者取貨時應出示身分憑證供加 油站驗證，確認無誤後收款取貨"}, "correctAnswers": ["A", "B", "C", "D"]}, {"id": "E12M_Q28", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 28, "text": "關於多角化用人當量扣抵，以下敘述何者錯誤 ?", "options": {"A": "超商可扣抵人力為商品毛利 /40,000", "B": "多角化扣抵人力總合為超商人力 +洗車人力 +快保人力 +承銷佣金人力+代 收人力", "C": "洗車可扣抵人力為洗車毛利 /35,000", "D": "快保可扣抵人力為快保毛利 /100,000"}, "correctAnswers": ["D"]}, {"id": "E12M_Q29", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 29, "text": "加油站國光牌機油退貨，應屆有限期多久前辦理 ?", "options": {"A": "過期時通知成品倉庫退貨", "B": "半 年", "C": "1年", "D": "3個月"}, "correctAnswers": ["B"]}, {"id": "E12M_Q30", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 30, "text": "下列何者為非 ?", "options": {"A": "禮物卡可用於快保中心", "B": "雨刷、變速箱油為快保中心營業項目", "C": "VIP會員點數折抵可用於快保中心", "D": "清淨劑屬於快保即叫料之一"}, "correctAnswers": ["D"]}, {"id": "E12M_Q31", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 31, "text": "下列何者非屬防止搬運事故之一般原則？", "options": {"A": "以機械代替人力", "B": "以機動車輛搬運", "C": "採取適當之搬運方法", "D": "儘量增加搬運距離"}, "correctAnswers": ["D"]}, {"id": "E12M_Q32", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 32, "text": "滅火方法有很多種，下列敘述何者不正確？", "options": {"A": "油料漏油引起火災可關閉進口，停止 輸送為隔離法", "B": "以水冷卻火場溫度為冷卻法", "C": "密閉燃燒空間使火自然熄滅為窒息法", "D": "以不燃性泡沫覆蓋燃燒物為抑制法"}, "correctAnswers": ["D"]}, {"id": "E12M_Q33", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 33, "text": "可燃物於無明火等火源條件下，在大氣中僅因受熱而開始自行持續燃燒所需之最低溫 度為下列何者？", "options": {"A": "沸點", "B": "閃火點", "C": "熔點", "D": "自燃溫度"}, "correctAnswers": ["D"]}, {"id": "E12M_Q34", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 34, "text": "以水為滅火劑，下列何者不是水的滅火效果？", "options": {"A": "抑制作用", "B": "加成作用", "C": "窒息 作用", "D": "冷卻作用"}, "correctAnswers": ["B"]}, {"id": "E12M_Q35", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 35, "text": "下列何種可燃性氣體比空氣重？", "options": {"A": "氫", "B": "乙炔", "C": "甲烷", "D": "丙烷"}, "correctAnswers": ["D"]}, {"id": "E12M_Q36", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 36, "text": "使用高空工作車，本公司列為哪一級危險性作業？", "options": {"A": "A級", "B": "B級", "C": "C級", "D": "D 級"}, "correctAnswers": ["B"]}, {"id": "E12M_Q37", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 37, "text": "下列何者不屬於本公司煉製輸儲工程高危險性 (A級)作業", "options": {"A": "開挖作業深度 5公尺以 上者", "B": "220伏特以上帶電作業", "C": "儲存中之油氣槽防火堤內動火", "D": "游離幅射作 業"}, "correctAnswers": ["D"]}, {"id": "E12M_Q38", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 38, "text": "防毒面具之濾毒罐中，有機氣體用濾罐不適用於下列何種氣狀有害物場所？", "options": {"A": "氯氣", "B": "四氯化碳", "C": "丙烯", "D": "苯"}, "correctAnswers": ["A"]}, {"id": "E12M_Q39", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 39, "text": "為防止職災，不需先行瞭解", "options": {"A": "職災發生模式", "B": "發生原因", "C": "人員懲處結果", "D": "災害實況"}, "correctAnswers": ["C"]}, {"id": "E12M_Q40", "exam": "E12M", "examLabel": "12等站長/副站長", "type": "mc", "no": 40, "text": "下列何者屬於職災之基本原因？", "options": {"A": "SOP未訂或不完善", "B": "動作失誤", "C": "不當使用防護 具", "D": "作業環境有缺陷"}, "correctAnswers": ["A"]}, {"id": "E12A_Q1", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 1, "text": "加油機油量計準確度測試超過下列何者時，應立即申請該加油槍油量計校正？", "options": {"A": "+3% (不含)以上及-2%(不含)以下", "B": "+3%(含)以上及-2%(含)以下", "C": "+3%(不含) 以上及-2%(不含)以下", "D": "+3%(含)以上及-2%(含)以下"}, "correctAnswers": ["A", "C"]}, {"id": "E12A_Q2", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 2, "text": "下列何職位之基本任務係依照公司規章經營管理所屬加油(氣)站，並領導屬員推展 本業及多角化相關業務，服務顧客以提升經營績效？", "options": {"A": "加油站所有成員", "B": "加油站 勞務人員", "C": "零售管理師", "D": "加油站站長"}, "correctAnswers": ["D"]}, {"id": "E12A_Q3", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 3, "text": "本事業部直營加油站油品品質管制應以下列何種為主？", "options": {"A": "標準檢驗局檢驗標識", "B": "重點化驗", "C": "全規範化驗", "D": "活檢化驗"}, "correctAnswers": ["B"]}, {"id": "E12A_Q4", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 4, "text": "會員積點成本以下列何者為基礎，且成本會隨油價上揚而增加？", "options": {"A": "交易金額", "B": "內 部轉撥單價", "C": "進口原油 3IF均價", "D": "杜拜或北海布蘭特進口原油價格"}, "correctAnswers": ["A"]}, {"id": "E12A_Q5", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 5, "text": "民國112年起政府採購作業之小額採購及公告金額最新金額分別為？", "options": {"A": "15萬及150 萬", "B": "10萬及1000萬", "C": "15萬及100萬", "D": "10萬及150萬"}, "correctAnswers": ["A"]}, {"id": "E12A_Q6", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 6, "text": "下列何者為本公司開放之載具類別？", "options": {"A": "自然人憑證", "B": "手機條碼載具", "C": "愛心 碼", "D": "以上皆是"}, "correctAnswers": ["D"]}, {"id": "E12A_Q7", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 7, "text": "依據行政院環保署「地下儲槽系統之加油機底部設置適當防止油品滲漏設施參考指 引」之規定，加油機油盆盛水進行液密性測試，其靜置時間應為下列何者？", "options": {"A": "12小時以上", "B": "24小時以上", "C": "48小時以上", "D": "72小時以上"}, "correctAnswers": ["B"]}, {"id": "E12A_Q8", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 8, "text": "依據行政院環保署「地下儲槽系統之加油機底部設置適當防止油品滲漏設施參考指 引」之規定，加油機油盆盛水進行液密性測試，其水位高度應為下列何者？", "options": {"A": "高於輸 油管", "B": "高於配電管", "C": "高於最高穿壁管", "D": "水位高度與地面齊"}, "correctAnswers": ["C"]}, {"id": "E12A_Q9", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 9, "text": "買受人為非營業人，開立電子發票之營業人，應於開立後幾小時內將發票資訊傳輸至 平台存證？", "options": {"A": "12小時", "B": "24小時", "C": "36小時", "D": "48小時"}, "correctAnswers": ["D"]}, {"id": "E12A_Q10", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 10, "text": "甲種漁船油依規定須添加哪種顏色染劑？", "options": {"A": "紅色", "B": "黑色", "C": "綠色", "D": "不用添 加"}, "correctAnswers": ["B"]}, {"id": "E12A_Q11", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 11, "text": "如遇顧客提出提桶(灌桶、槽)需求時，不得將油料加注於何種容器中？", "options": {"A": "玻璃容 器", "B": "紙質容器", "C": "塑膠袋", "D": "以上皆是"}, "correctAnswers": ["D"]}, {"id": "E12A_Q12", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 12, "text": "加油站投款單應註明投入時間並簽名連同油款投入銀行之保險櫃，其中存根應留存多 久備查？", "options": {"A": "一週", "B": "二週", "C": "三週", "D": "四週"}, "correctAnswers": ["A"]}, {"id": "E12A_Q13", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 13, "text": "以下何者敘述正確？", "options": {"A": "加油使用中油聯名信用卡刷卡支付，銀行紅利及會員點數僅 能擇一累積", "B": "計程車優惠卡不具備會員卡功能", "C": "會員點數折抵可以指定折抵金 額", "D": "以上皆是"}, "correctAnswers": ["B"]}, {"id": "E12A_Q14", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 14, "text": "於收氣過程中遇下列何種情況應中止卸收作業？", "options": {"A": "壓力有異常變化時", "B": "發生地震 時", "C": "雷雨等惡劣天氣時", "D": "以上皆是"}, "correctAnswers": ["D"]}, {"id": "E12A_Q15", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 15, "text": "加油服務人員如發現加油槍出油慢(低於 20L/min) ，該如何處理？", "options": {"A": "檢查該油槽供 應之油槍是否皆如此", "B": "檢查加油機油盆及陰井是否有油料洩漏", "C": "檢查該油槽之 沉油泵控制器顯示是否正常", "D": "以上皆是"}, "correctAnswers": ["D"]}, {"id": "E12A_Q16", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 16, "text": "加油站公共意外責任保險，有關中油自負額 5,000元部份，出險項目如為「加錯 油」 ，應由下列何者負擔？", "options": {"A": "加油站週轉金核銷", "B": "加油站自行負擔", "C": "個案簽陳 處長核示", "D": "零售中心負擔"}, "correctAnswers": ["B"]}, {"id": "E12A_Q17", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 17, "text": "下列何者為加氣站站長應具備之證照？", "options": {"A": "缺氧作業主管", "B": "高壓氣體特定設備操作 人員", "C": "工作場所急救人員", "D": "以上皆是"}, "correctAnswers": ["D"]}, {"id": "E12A_Q18", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 18, "text": "油站站長應於每月幾號前將次月工作人員輪值表排妥後，送管理師核准並轉送主管單 位備查？", "options": {"A": "15日", "B": "20日", "C": "25日", "D": "30日"}, "correctAnswers": ["A"]}, {"id": "E12A_Q19", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 19, "text": "加油站勞務帶班人員應具備以下何種證照？", "options": {"A": "急救人員", "B": "有機溶劑作業主管", "C": "丙種職業安全衛生作業主管", "D": "以上皆是"}, "correctAnswers": ["D"]}, {"id": "E12A_Q20", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 20, "text": "顧客於自營站加油付款時，使用街口支付付款，無法以下列何者一併使用於單筆交 易？", "options": {"A": "VIP會員點數", "B": "街口幣", "C": "電子油券", "D": "現金"}, "correctAnswers": ["D"]}, {"id": "E12A_Q21", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 21, "text": "缺氧作業場所尚未確定危險已解除前只有何人可以進入該場所？", "options": {"A": "保警", "B": "操作領班", "C": "指定人員", "D": "工場長"}, "correctAnswers": ["C"]}, {"id": "E12A_Q22", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 22, "text": "本公司將二公尺以上施工架之組配及拆除工作列為何種作業？", "options": {"A": "A級危險性作業", "B": "B級危險性作業", "C": "C級危險性作業", "D": "一般作業"}, "correctAnswers": ["B"]}, {"id": "E12A_Q23", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 23, "text": "工安是人人的責任，然而誰的支持，對工安管理所需資源的取得，有最大的幫助？", "options": {"A": "工安人員", "B": "主管", "C": "現場作業人員", "D": "維修人員"}, "correctAnswers": ["B"]}, {"id": "E12A_Q24", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 24, "text": "下列那一項不是本公司安全衛生政策之一？", "options": {"A": "全員工安", "B": "風險管理", "C": "健康關懷", "D": "製程安全"}, "correctAnswers": ["D"]}, {"id": "E12A_Q25", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 25, "text": "油槽壁安裝冷卻水環主要目的是", "options": {"A": "滅火用", "B": "冷卻用", "C": "美觀用", "D": "以上皆非"}, "correctAnswers": ["B"]}, {"id": "E12A_Q26", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 26, "text": "進行危害之風險評估時，應考量之因素包括", "options": {"A": "後果", "B": "發生頻率", "C": "後果與發生頻率", "D": "經濟因素"}, "correctAnswers": ["C"]}, {"id": "E12A_Q27", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 27, "text": "氨氣、硫化氫等化學物質洩漏，發生幾人以上罹災勞工需住院治療者，即屬重大職業 災害？", "options": {"A": "一人", "B": "二人", "C": "三人", "D": "四人"}, "correctAnswers": ["A"]}, {"id": "E12A_Q28", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 28, "text": "就防災對策而言，防護具之採用對策屬於？", "options": {"A": "主要對策", "B": "輔助對策", "C": "唯一對策", "D": "臨時對策"}, "correctAnswers": ["B"]}, {"id": "E12A_Q29", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 29, "text": "防護具保管之方法下列何者為不正確？", "options": {"A": "應儲放在可日曬之處以保乾燥", "B": "應放置在 通風良好之場所", "C": "避免接近高溫物體", "D": "應置放陰涼場所使其自然風乾後存放"}, "correctAnswers": ["A"]}, {"id": "E12A_Q30", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 30, "text": "安全觀察實施的方式為", "options": {"A": "臨時性的安全觀察", "B": "有意的安全觀察", "C": "計畫性的安全 觀察", "D": "視現場需要可採取上述任一種或合併實施"}, "correctAnswers": ["D"]}, {"id": "E12A_Q31", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 31, "text": "製程變更管理屬於全方位安全管理中的何者？", "options": {"A": "技術管理", "B": "設備管理", "C": "人員 管理", "D": "文件管理"}, "correctAnswers": ["A"]}, {"id": "E12A_Q32", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 32, "text": "下列敘述何者為正確？", "options": {"A": "油槽液位計應定期以量油尺校正其準確度", "B": "油槽改建不 須執行變更管理", "C": "液位計無須做自動檢查", "D": "所有油槽攔液堤內均應設置氣體偵器"}, "correctAnswers": ["A"]}, {"id": "E12A_Q33", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 33, "text": "漏油污染地面且臭味溢散時，正確之處理方式為", "options": {"A": "以消防水稀釋及沖散", "B": "噴泡沫掩 蓋臭味", "C": "先以砂土或鋸木屑吸油後清理", "D": "待其自然清除"}, "correctAnswers": ["C"]}, {"id": "E12A_Q34", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 34, "text": "兩個部門共用油槽與閘閥進料，如一方欲停爐檢修時，應", "options": {"A": "確實查明管線隔離情形", "B": "立即以N2吹驅加速管線排油", "C": "不需跨部門連繫及協調", "D": "檢修作業前不必實施 預知危險"}, "correctAnswers": ["A"]}, {"id": "E12A_Q35", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 35, "text": "裂解爐之連鎖控制系統如欲改以旁路操作，應", "options": {"A": "為省時間，由操作人自行改為旁路", "B": "由操作人提出申請改變操作方式，不需評估後果", "C": "落實執行變更管理", "D": "以上 皆非"}, "correctAnswers": ["C"]}, {"id": "E12A_Q36", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 36, "text": "依本公司油銷事業部小額採購作業程序規定之採購發包流程，有關議價或比價程序， 下列何者為是 ?", "options": {"A": "採購金額 1萬元以下者，洽交通部觀光局所列大型量販店 (如家樂 福、好市多、大潤發 …等) 得免由廠商提出報價單及辦理後續議價程序", "B": "委請不動產 鑑價、徵信費專業服務案，須專案陳准辦理議價，免比價", "C": "辦理共同供應契約額外採 購(有相容性須求或須一併安裝者 )，得以議價方式辦理", "D": "以上皆是"}, "correctAnswers": ["D"]}, {"id": "E12A_Q37", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 37, "text": "依本公司油銷事業部小額採購作業程序規定之請購申請流程，請購前申請 (需求)單位 應先確認之事項，以下何者為非 ?", "options": {"A": "現有長期契約、共同供應契約可使用者，應優先 以該契約辦理採購", "B": "應先確認預算來源，且無分批採購之情形", "C": "逕洽廠商採購時， 無須查證廠商是否已排除為拒絕往來廠商", "D": "以上皆非"}, "correctAnswers": ["C"]}, {"id": "E12A_Q38", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 38, "text": "依本公司油銷事業部小額採購作業程序規定辦理採購，下列何者不正確 ?", "options": {"A": "若有性 質類似購案，應考量併案辦理或訂定長期契約", "B": "採購之申請、發包、驗收、請款核 定層級應依採購作業授權簡表規定辦理", "C": "辨理以書面驗收、免現場查驗案件，驗收 相關人員，未確認廠商是否確實履約及請款資料內容是 否屬實", "D": "付款依本公司支出 憑證處理要點辦理"}, "correctAnswers": ["C"]}, {"id": "E12A_Q39", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 39, "text": "勞務採購之採購金額，何者有誤 ?", "options": {"A": "小額採購為 15萬元以下", "B": "公告金額為 150萬 元以上", "C": "查核金額為 1000萬元以上", "D": "巨額為1億元以上"}, "correctAnswers": ["D"]}, {"id": "E12A_Q40", "exam": "E12A", "examLabel": "12等助理站長", "type": "mc", "no": 40, "text": "財物採購之採購金額，何者有誤 ?", "options": {"A": "小額採購為 15萬元以下", "B": "公告金額為 150萬 元以上", "C": "查核金額為 1000萬元以上", "D": "巨額為1億元以上"}, "correctAnswers": ["C"]}, {"id": "E13M_Q1", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 1, "text": "依據3S日結系統油槽每日差異數資料，如 (實際存量 -計算存量 )超過-100公升時， 應瞭解差異原因，並進行以下何種作業 ?", "options": {"A": "量測測漏管油氣濃度", "B": "檢查加油機運作 是否正常", "C": "以上皆是", "D": "以上皆非"}, "correctAnswers": ["C"]}, {"id": "E13M_Q2", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 2, "text": "加油站每月盤查各油槽存量，汽油類其他因素盈虧率之核銷標準：", "options": {"A": "負千分之 1.5(含)以內", "B": "負千分之 1(含)以內", "C": "負千分之 0.5(含)以內", "D": "千分之0以上"}, "correctAnswers": ["C"]}, {"id": "E13M_Q3", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 3, "text": "加油站於夜間離峰時段，每座泵島保留之找零金額以不超過多少為原則 ?", "options": {"A": "2,000 元", "B": "3,000 元", "C": "5,000 元", "D": "6,000 元"}, "correctAnswers": ["B"]}, {"id": "E13M_Q4", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 4, "text": "人工量油與自動液位計量測油槽油位差異超過多少，應向修護中心報修並紀錄於工作 日誌?", "options": {"A": "5mm", "B": "10mm", "C": "15mm", "D": "20mm"}, "correctAnswers": ["B"]}, {"id": "E13M_Q5", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 5, "text": "除可提供購油手冊之漁民及可提出農機使用證之農民外，其他顧客提桶(灌桶)加油 之數量，汽油在多少公升以上，加油站須登記顧客相關資料", "options": {"A": "5公升", "B": "10公升", "C": "50公升", "D": "100公升"}, "correctAnswers": ["B"]}, {"id": "E13M_Q6", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 6, "text": "加油站遇到何種顧客不須婉拒加油", "options": {"A": "經多次勸導仍未熄火者", "B": "經統一編號檢核為汽 柴批發業者", "C": "未熄滅爐火之流動餐車", "D": "未掛車牌者"}, "correctAnswers": ["D"]}, {"id": "E13M_Q7", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 7, "text": "有關收油作業，何項非加油站值班人員之工作", "options": {"A": "放置滅火器於油罐車卸油口上風約五 公尺處", "B": "取下正確油槽收油口蓋", "C": "開啟緊急閥操作開關 (按鈕)", "D": "檢查靜電接地線 接妥"}, "correctAnswers": ["C"]}, {"id": "E13M_Q8", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 8, "text": "為保障顧客隱私，加油站不接受監視影像調閱 (拷貝)申請，且調閱(拷貝)內容僅供申請用途使用", "options": {"A": "檢調單位", "B": "收單銀行", "C": "一般顧客", "D": "以上皆可"}, "correctAnswers": ["C"]}, {"id": "E13M_Q9", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 9, "text": "前台交易 :顧客加油金額為 100元，信用卡與現金混合付款 :付款類別為信用卡， 【副商 品】T25數量打入 10 ，則信用卡實際簽單金額應為多少", "options": {"A": "10", "B": "100", "C": "90", "D": "110"}, "correctAnswers": ["C"]}, {"id": "E13M_Q10", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 10, "text": "建立班結報表發現某槍的電子公升數發出量異常，造成相關油品 /油槽統計差異數過 大，以交易查詢計算出實際發出公升數後，更新至該槍號的班報 -本班機械錶欄位， 要再次產生本班的班報需執行", "options": {"A": "重建計算", "B": "重新試算", "C": "轉出明細", "D": "查詢班報"}, "correctAnswers": ["B"]}, {"id": "E13M_Q11", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 11, "text": "前台已交班但班報未讀到電子累計數，若前台交班列印紙上有正確的電子累計數值， 則可更新至後台程式 -系統管理 -累計數修改 -", "options": {"A": "電子表修改", "B": "機械表修改", "C": "公升數 修改", "D": "以上皆非"}, "correctAnswers": ["A"]}, {"id": "E13M_Q12", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 12, "text": "若本月月底匯入灌裝口準確度異常，則會影響油料分析盈虧統計表裡面的", "options": {"A": "運輸盈 虧試算表", "B": "沒有影響", "C": "油槽隙尺表", "D": "試桶作業維護"}, "correctAnswers": ["A"]}, {"id": "E13M_Q13", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 13, "text": "前台已交班但班報未讀到電子累計數，且前台交班列印紙上也沒有正確的電子累計數 值，則可利用後台程式", "options": {"A": "交易查詢 -交易資料查詢", "B": "系統管理 -累計數查詢", "C": "前班 累計數", "D": "以上皆非 計算出實際發出公升數並更新至班報的交班累計數 -本班機械錶 做重新計算"}, "correctAnswers": ["A"]}, {"id": "E13M_Q14", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 14, "text": "目前事業部零售室業務規劃只允許付款類別為", "options": {"A": "中油pay", "B": "條碼支付", "C": "票證", "D": "現 金已出的紙本電子發票沖帳為含載具發票"}, "correctAnswers": ["C"]}, {"id": "E13M_Q15", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 15, "text": "對某筆已做原發票保留的交易，再做一次沖帳：原發票作廢開立新發票，會造成班報 中的各島營業表：銷貨發票總額會比應開立發票總額", "options": {"A": "多", "B": "少", "C": "沒有影響", "D": "以上 皆非"}, "correctAnswers": ["A"]}, {"id": "E13M_Q16", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 16, "text": "會員資料登錄後，多久需將會員卡申請表寄交零售中心", "options": {"A": "每半月", "B": "每月", "C": "每兩月", "D": "每季"}, "correctAnswers": ["B"]}, {"id": "E13M_Q17", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 17, "text": "下列何者會員卡卡號第一碼英文字代表加盟站代為發行之條碼會員卡 :", "options": {"A": "V", "B": "H", "C": "R", "D": "J"}, "correctAnswers": ["D"]}, {"id": "E13M_Q18", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 18, "text": "各加油站 (以員工編號登入 )每月幾日前登入「 VIPBbq會員卡基本業務查詢 001單站 異常查詢 (加油站)」查詢該站前月會員卡異常交易資料", "options": {"A": "5", "B": "7", "C": "10", "D": "15"}, "correctAnswers": ["A"]}, {"id": "E13M_Q19", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 19, "text": "如遇顧客實體會員捷利卡 (紫捷)故障或遺失該如何處理 ?", "options": {"A": "請顧客至直銷中心辦理", "B": "請顧客至零售中心辦理", "C": "請顧客至自營加油站填妥申請表，由加油站協助後送處 理", "D": "請顧客聯絡轄區管理師辦理"}, "correctAnswers": ["C"]}, {"id": "E13M_Q20", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 20, "text": "如遇會員系統離線等特殊情況，或交易已完成而網路連線不通，顧客堅持使用會員點 數折抵時， 3S需以何代碼站掛入帳", "options": {"A": "D9999", "B": "D999", "C": "D99ZZ", "D": "D999ZZZ"}, "correctAnswers": ["B"]}, {"id": "E13M_Q21", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 21, "text": "客人更換發票，遇本公司報完稅 -單月且發票開立後多少天內，才可執行專案作廢", "options": {"A": "30", "B": "45", "C": "60", "D": "90"}, "correctAnswers": ["C"]}, {"id": "E13M_Q22", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 22, "text": "依中油精緻洗車標準作業程序，洗完一台車的建議時間應多久為佳，以提高周轉率", "options": {"A": "12分鐘", "B": "10分鐘", "C": "8分鐘", "D": "6分鐘"}, "correctAnswers": ["C"]}, {"id": "E13M_Q23", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 23, "text": "以下何者不正確 ?", "options": {"A": "高壓水槍沖洗前應檢視顧客車身，如後視鏡、雨刷等是否有損 壞情形，若發現應提前告知顧客", "B": "為節省成本，車身與輪圈海綿應使用同一個", "C": "清洗人員應穿著雨鞋，避免工作過程滑倒造成傷害", "D": "泡沫噴槍、高壓水槍不可 朝向人噴灑，避免人員受傷"}, "correctAnswers": ["B"]}, {"id": "E13M_Q24", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 24, "text": "複合商店每季全面盤點商品存貨後，其盈虧在多少核銷金額比率內得依實核銷？", "options": {"A": "百分之一", "B": "百分之三", "C": "千分之三", "D": "千分之一 "}, "correctAnswers": ["C"]}, {"id": "E13M_Q25", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 25, "text": "結算盤點時，盤盈虧金額在規定核銷金額比率內得依實核銷；請問盤盈虧金額是各商 品盤差量乘以下列何種價格來算出？", "options": {"A": "商品售價", "B": "商品進價", "C": "商品優惠價", "D": "以上相加"}, "correctAnswers": ["B"]}, {"id": "E13M_Q26", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 26, "text": "關於洗可麗系列產品下列敘述，何者錯誤 ?", "options": {"A": "113年中油新上市洗沐產品為胺基酸 洗髮精、玻尿酸沐浴露、海牡丹沐浴露、海牡丹洗髮精", "B": "海牡丹洗沐系列產品為中 油綠能科技研究所研發", "C": "玻尿酸沐浴露、胺基酸洗髮精單瓶售價 為269元", "D": "單站 不可針對自有產品 (洗可麗、國光牌機油 )自行辦理促銷"}, "correctAnswers": ["C"]}, {"id": "E13M_Q27", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 27, "text": "關於中油 PAY電子商城，以下敘述何者錯誤 ?", "options": {"A": "提供消費者選購各項用品，並可以 會員點數、信用卡等方式付款", "B": "供貨方式分為宅配到府、到站取貨兩種", "C": "全額 會員點數兌換視為贈品，不提供退貨服務", "D": "消費者取貨時應出示身分憑證供加油 站驗證，確認無誤後收款取貨"}, "correctAnswers": ["D"]}, {"id": "E13M_Q28", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 28, "text": "關於多角化用人當量扣抵，以下敘述何者錯誤 ?", "options": {"A": "超商可扣抵人力為商品毛利 /40,000", "B": "多角化扣抵人力總合為超商人力 +洗車人力 +快保人力 +承銷佣金人力 +代 收人力", "C": "洗車可扣抵人力為洗車毛利 /35,000", "D": "快保可扣抵人力為快保毛利 /100,000"}, "correctAnswers": ["D"]}, {"id": "E13M_Q29", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 29, "text": "請問下列何者不在快保中心設置原則考量中 ?", "options": {"A": "快保中心之設置應該以不影響正常 加油動線為原則", "B": "經營快保業務具經濟效益者", "C": "快保中心中必須至少含 2個待保養 停車位", "D": "每日平均車次在 1200次上為優先考慮"}, "correctAnswers": ["C"]}, {"id": "E13M_Q30", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 30, "text": "下列何者為非 ?", "options": {"A": "禮物卡可用於快保中心", "B": "雨刷、變速 箱油為快保中心營業項目", "C": "VIP會員點數折抵可用於快保中心", "D": "清淨劑屬於快保即叫料之一"}, "correctAnswers": ["D"]}, {"id": "E13M_Q31", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 31, "text": "風險基準檢查簡稱", "options": {"A": "FBI", "B": "GBI", "C": "RBG", "D": "RBI"}, "correctAnswers": ["D"]}, {"id": "E13M_Q32", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 32, "text": "不銹鋼材料不適用於下列何種檢測方法？", "options": {"A": "MT", "B": "RT", "C": "PT", "D": "ET"}, "correctAnswers": ["A"]}, {"id": "E13M_Q33", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 33, "text": "實施管線風險評估所關切之風險係以", "options": {"A": "公眾影響為主", "B": "個人影響為主", "C": "公司營運 為主", "D": "單位業績為主"}, "correctAnswers": ["A"]}, {"id": "E13M_Q34", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 34, "text": "實施管線風險評估係以哪一項為代表？", "options": {"A": "最弱點", "B": "最強點", "C": "中庸點", "D": "任意點"}, "correctAnswers": ["A"]}, {"id": "E13M_Q35", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 35, "text": "初步危害分析在下列何階段開始施行較好？", "options": {"A": "生產階段", "B": "試車階段", "C": "設計階段", "D": "建廠階段"}, "correctAnswers": ["C"]}, {"id": "E13M_Q36", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 36, "text": "永久全失能，每次應按損失日數計算登記？", "options": {"A": "4000天", "B": "6000 天", "C": "8000天", "D": "5000天"}, "correctAnswers": ["B"]}, {"id": "E13M_Q37", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 37, "text": "下列何者非永久全失能？", "options": {"A": "一眼失明", "B": "一眼及一手失能", "C": "一腳及一眼失能", "D": "雙手 失能"}, "correctAnswers": ["A"]}, {"id": "E13M_Q38", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 38, "text": "所謂暫時全失能傷害，係指受傷勞工至少於多久時間內無法返回工作者？", "options": {"A": "8小時", "B": "12小時", "C": "24小時", "D": "36小時"}, "correctAnswers": ["C"]}, {"id": "E13M_Q39", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 39, "text": "下列何者非屬職業災害之損失？", "options": {"A": "保險公司之理賠費用", "B": "現場緊急處置費", "C": "受損 設備之修護費用", "D": "人員傷亡"}, "correctAnswers": ["A"]}, {"id": "E13M_Q40", "exam": "E13M", "examLabel": "13等站長/副站長", "type": "mc", "no": 40, "text": "下列何者屬於職業傷害之基本原因 ？", "options": {"A": "能量及危害物", "B": "不安全行為", "C": "不安全狀 況", "D": "雇主缺乏安全政策及決心"}, "correctAnswers": ["D"]}];
+
+    function shuffleArray(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function formatCorrect(correctAnswers, type) {
+      if (type === "tf") {
+        return correctAnswers[0] === "O" ? "O（○）" : "X（×）";
+      }
+      return correctAnswers.join("、");
+    }
+
+    let currentSet = [];
+    let currentIndex = 0;
+    let currentScore = 0;
+    let wrongQuestions = [];
+    const POINT_PER_QUESTION = 2;
+
+    const examSelect = document.getElementById("examSelect");
+    const includeTfEl = document.getElementById("includeTf");
+    const includeMcEl = document.getElementById("includeMc");
+    const questionCountEl = document.getElementById("questionCount");
+    const shuffleEl = document.getElementById("shuffle");
+
+    const startBtn = document.getElementById("startBtn");
+    const quizCard = document.getElementById("quizCard");
+    const examLabelEl = document.getElementById("examLabel");
+    const questionTypeEl = document.getElementById("questionType");
+    const questionIdEl = document.getElementById("questionId");
+    const questionTextEl = document.getElementById("questionText");
+    const optionsContainer = document.getElementById("optionsContainer");
+    const feedbackEl = document.getElementById("feedback");
+    const currentIndexLabel = document.getElementById("currentIndexLabel");
+    const totalCountLabel = document.getElementById("totalCountLabel");
+    const currentScoreEl = document.getElementById("currentScore");
+    const submitBtn = document.getElementById("submitBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const summaryCard = document.getElementById("summaryCard");
+
+    function getExamLabel(code) {
+      const sample = QUESTIONS.find(q => q.exam === code);
+      return sample ? sample.examLabel : code;
+    }
+
+    function startPractice(fromWrong = false) {
+      const examCode = examSelect.value;
+      const useTf = includeTfEl.checked;
+      const useMc = includeMcEl.checked;
+
+      let pool;
+      if (fromWrong) {
+        pool = currentSet.slice();
+      } else {
+        pool = QUESTIONS.filter(q => q.exam === examCode && (
+          (q.type === "tf" && useTf) ||
+          (q.type === "mc" && useMc)
+        ));
+      }
+
+      if (pool.length === 0) {
+        alert("本次條件下沒有題目，請檢查試卷與題型選擇。");
+        return;
+      }
+
+      let count = parseInt(questionCountEl.value, 10);
+      if (!Number.isFinite(count) || count <= 0) {
+        count = pool.length;
+      } else {
+        count = Math.min(count, pool.length);
+      }
+
+      if (shuffleEl.checked) {
+        pool = shuffleArray(pool);
+      }
+
+      currentSet = pool.slice(0, count);
+      currentIndex = 0;
+      currentScore = 0;
+      wrongQuestions = [];
+
+      currentScoreEl.textContent = currentScore.toString();
+      totalCountLabel.textContent = currentSet.length.toString();
+      summaryCard.classList.add("hidden");
+      quizCard.classList.remove("hidden");
+
+      examLabelEl.textContent = getExamLabel(examCode);
+
+      renderCurrentQuestion();
+    }
+
+    function renderCurrentQuestion() {
+      const q = currentSet[currentIndex];
+      currentIndexLabel.textContent = (currentIndex + 1).toString();
+
+      questionTypeEl.textContent = q.type === "tf" ? "是非題" : "單選題";
+      questionIdEl.textContent = (q.type === "tf" ? "T" : "Q") + q.no;
+      questionTextEl.textContent = q.no + "．" + q.text;
+
+      optionsContainer.innerHTML = "";
+      feedbackEl.classList.add("hidden");
+      feedbackEl.textContent = "";
+      nextBtn.classList.add("hidden");
+      submitBtn.classList.remove("hidden");
+      submitBtn.disabled = false;
+
+      if (q.type === "tf") {
+        renderTfOptions();
+      } else {
+        renderMcOptions(q);
+      }
+    }
+
+    function renderTfOptions() {
+      const choices = [
+        { value: "O", label: "O（○）" },
+        { value: "X", label: "X（×）" }
+      ];
+      choices.forEach(ch => {
+        const li = document.createElement("li");
+        li.className = "option";
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = "answer";
+        input.value = ch.value;
+        const span = document.createElement("span");
+        span.className = "option-label";
+        span.textContent = ch.label;
+        li.appendChild(input);
+        li.appendChild(span);
+        li.addEventListener("click", () => {
+          input.checked = true;
+        });
+        optionsContainer.appendChild(li);
+      });
+    }
+
+    function renderMcOptions(q) {
+      const order = ["A", "B", "C", "D"];
+      order.forEach(letter => {
+        const text = (q.options && q.options[letter]) || "";
+        if (!text) return;
+        const li = document.createElement("li");
+        li.className = "option";
+        li.dataset.option = letter;
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = "answer";
+        input.value = letter;
+        const span = document.createElement("span");
+        span.className = "option-label";
+        span.textContent = letter + ". " + text;
+        li.appendChild(input);
+        li.appendChild(span);
+        li.addEventListener("click", () => {
+          input.checked = true;
+        });
+        optionsContainer.appendChild(li);
+      });
+    }
+
+    function getSelectedAnswer() {
+      const radios = document.querySelectorAll('input[name="answer"]');
+      for (const r of radios) {
+        if (r.checked) return r.value;
+      }
+      return null;
+    }
+
+    function lockOptions() {
+      const options = optionsContainer.querySelectorAll(".option");
+      options.forEach(opt => {
+        opt.classList.add("disabled");
+        const input = opt.querySelector("input");
+        if (input) input.disabled = true;
+      });
+    }
+
+    function markOptions(correctAnswers, userAnswer, type) {
+      const upperSet = correctAnswers.map(a => a.toUpperCase());
+      const options = optionsContainer.querySelectorAll(".option");
+      options.forEach(opt => {
+        const input = opt.querySelector("input");
+        if (!input) return;
+        const val = input.value.toUpperCase();
+        if (upperSet.includes(val)) {
+          opt.classList.add("correct");
+        }
+        if (userAnswer && val === userAnswer.toUpperCase() && !upperSet.includes(val)) {
+          opt.classList.add("incorrect");
+        }
+      });
+    }
+
+    function submitAnswer() {
+      const q = currentSet[currentIndex];
+      const userAnswer = getSelectedAnswer();
+      if (!userAnswer) {
+        alert("請先選擇一個答案。");
+        return;
+      }
+
+      const upperUser = userAnswer.toUpperCase();
+      const correctSet = (q.correctAnswers || []).map(a => a.toUpperCase());
+      const isCorrect = correctSet.includes(upperUser);
+
+      lockOptions();
+      markOptions(correctSet, upperUser, q.type);
+
+      let msg = "";
+      let cls = "";
+      if (isCorrect) {
+        currentScore += POINT_PER_QUESTION;
+        currentScoreEl.textContent = currentScore.toString();
+        msg = "✔ 回答正確！";
+        cls = "correct";
+      } else {
+        msg = "✘ 回答錯誤。";
+        cls = "incorrect";
+        if (!wrongQuestions.some(w => w.id === q.id)) {
+          wrongQuestions.push(q);
+        }
+      }
+
+      feedbackEl.className = "feedback " + cls;
+      feedbackEl.innerHTML = `
+        <span class="feedback-pill ${cls}">${msg}</span>
+        <span>你的作答：<strong>${q.type === "tf"
+          ? (upperUser === "O" ? "O（○）" : "X（×）")
+          : upperUser}</strong></span>
+        <span>正確答案：<strong>${formatCorrect(correctSet, q.type)}</strong></span>
+        ${q.correctAnswers.length > 1 ? '<span style="font-size:0.8rem;color:#7b83a0;">（本題多個選項皆視為正確，任選其一即得分）</span>' : ""}
+      `;
+
+      submitBtn.classList.add("hidden");
+      nextBtn.classList.remove("hidden");
+      submitBtn.disabled = true;
+
+      if (currentIndex === currentSet.length - 1) {
+        nextBtn.textContent = "查看成績總結";
+      } else {
+        nextBtn.textContent = "下一題 ▶";
+      }
+    }
+
+    function goNext() {
+      if (currentIndex >= currentSet.length - 1) {
+        showSummary();
+        return;
+      }
+      currentIndex += 1;
+      renderCurrentQuestion();
+    }
+
+    function showSummary() {
+      const totalQuestions = currentSet.length;
+      const maxScore = totalQuestions * POINT_PER_QUESTION;
+      const percent = ((currentScore / maxScore) * 100).toFixed(1);
+      const wrongCount = wrongQuestions.length;
+      const examCode = examSelect.value;
+      const examName = getExamLabel(examCode);
+
+      summaryCard.classList.remove("hidden");
+
+      let html = `
+        <div class="summary-em">本次練習結果</div>
+        <div class="summary-tag">試卷：<strong>${examName}</strong></div>
+        <div>作答題數：<strong>${totalQuestions}</strong> 題</div>
+        <div>總得分：<strong>${currentScore}／${maxScore}</strong> 分</div>
+        <div>正確率：約 <strong>${percent}%</strong></div>
+        <div>本次錯題數：<strong>${wrongCount}</strong> 題</div>
+        <div style="font-size:0.85rem;color:#6b7392;margin-top:4px;">
+          可以點「重新設定」換卷或重抽題目，或「只做本次錯題重練」專攻弱點。
+        </div>
+      `;
+
+      if (wrongCount > 0) {
+        html += `
+          <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:8px;">
+            <button class="btn btn-primary" id="retryWrongBtn" type="button">
+              🔁 只做本次錯題重練
+            </button>
+          </div>
+        `;
+      }
+
+      summaryCard.innerHTML = html;
+
+      if (wrongCount > 0) {
+        const retryWrongBtn = document.getElementById("retryWrongBtn");
+        retryWrongBtn.addEventListener("click", startWrongPractice);
+      }
+
+      nextBtn.classList.add("hidden");
+      submitBtn.classList.add("hidden");
+    }
+
+    function startWrongPractice() {
+      if (wrongQuestions.length === 0) {
+        alert("本次沒有錯題，可直接重新設定或換卷練習。");
+        return;
+      }
+
+      let pool = wrongQuestions.slice();
+      if (shuffleEl.checked) {
+        pool = shuffleArray(pool);
+      }
+
+      currentSet = pool;
+      currentIndex = 0;
+      currentScore = 0;
+      wrongQuestions = [];
+
+      currentScoreEl.textContent = "0";
+      totalCountLabel.textContent = currentSet.length.toString();
+      summaryCard.classList.add("hidden");
+      quizCard.classList.remove("hidden");
+
+      const examCode = examSelect.value;
+      examLabelEl.textContent = getExamLabel(examCode);
+
+      renderCurrentQuestion();
+    }
+
+    function restart() {
+      currentSet = [];
+      currentIndex = 0;
+      currentScore = 0;
+      wrongQuestions = [];
+      currentScoreEl.textContent = "0";
+      quizCard.classList.add("hidden");
+      summaryCard.classList.add("hidden");
+    }
+
+    window.QUESTIONS = QUESTIONS;
+
+    startBtn.addEventListener("click", () => startPractice(false));
+    submitBtn.addEventListener("click", submitAnswer);
+    nextBtn.addEventListener("click", goNext);
+    restartBtn.addEventListener("click", restart);
+  </script>
+</body>
+</html>
